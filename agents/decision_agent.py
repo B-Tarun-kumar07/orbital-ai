@@ -1,33 +1,42 @@
-class Satellite:
-    def __init__(self, sat_id, priority, fuel):
-        self.sat_id = sat_id
-        self.priority = priority
-        self.fuel = fuel
+from agents.collision_agent import CollisionAgent
+from agents.negotiation_agent import NegotiationAgent
 
+class DecisionAgent:
 
-def decide_maneuver(sat1, sat2):
+    def process(
+        self,
+        satellites
+    ):
 
-    # Lower priority satellite moves
-    if sat1.priority < sat2.priority:
-        return sat1
+        collision_agent = CollisionAgent()
 
-    if sat2.priority < sat1.priority:
-        return sat2
+        negotiation_agent = NegotiationAgent()
 
-    # If priority same, lower fuel satellite stays
-    if sat1.fuel > sat2.fuel:
-        return sat1
+        collisions = collision_agent.detect_collisions(
+            satellites
+        )
 
-    if sat2.fuel > sat1.fuel:
-        return sat2
+        results = []
 
-    # Final tie breaker
-    return sat1 if sat1.sat_id < sat2.sat_id else sat2
+        for collision in collisions:
 
+            result = negotiation_agent.negotiate(
 
-sat_a = Satellite(101, 10, 50)
-sat_b = Satellite(202, 5, 80)
+                collision["satellite_1"],
 
-decision = decide_maneuver(sat_a, sat_b)
+                collision["satellite_2"],
 
-print(f"Satellite {decision.sat_id} should move")
+                collision
+
+            )
+
+            results.append({
+
+                "collision":
+                    collision,
+
+                "decision":
+                    result
+            })
+
+        return results
