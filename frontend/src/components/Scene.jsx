@@ -1,7 +1,7 @@
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, Stars } from "@react-three/drei";
 import { useState } from "react";
-
+import * as THREE from "three";
 import Earth from "./Earth";
 import Satellite from "./Satellite";
 import OrbitRing from "./OrbitRing";
@@ -32,17 +32,52 @@ export default function Scene({
     >
       {/* Lights */}
 
-      <ambientLight intensity={0.6} />
+      
+  <ambientLight intensity={0.1} />
 
-      <directionalLight
-        position={[8, 5, 8]}
-        intensity={2}
-      />
+    <directionalLight
+  position={[20, 8, 15]}
+  intensity={2}
+/>
 
-      <pointLight
-        position={[-8, -2, 8]}
-        intensity={0.5}
-      />
+   
+{/* Sun Core */}
+<mesh position={[20, 8, 15]}>
+  <sphereGeometry args={[0.6, 32, 32]} />
+  <meshBasicMaterial
+    color="#fff9c4"
+    toneMapped={false}
+  />
+</mesh>
+
+{/* Inner Glow */}
+<mesh position={[20, 8, 15]} scale={1.4}>
+  <sphereGeometry args={[0.6, 24, 24]} />
+  <meshBasicMaterial
+    color="#ffd54f"
+    transparent
+    opacity={0.25}
+    side={THREE.BackSide}
+    toneMapped={false}
+  />
+</mesh>
+
+{/* Outer Glow */}
+<mesh position={[20, 8, 15]} scale={2}>
+  <sphereGeometry args={[0.6, 16, 16]} />
+  <meshBasicMaterial
+    color="#ff9800"
+    transparent
+    opacity={0.08}
+    side={THREE.BackSide}
+    toneMapped={false}
+  />
+</mesh>
+<pointLight
+  position={[-10, -2, 6]}
+  intensity={0.3}
+/>
+
 
       {/* Stars */}
 
@@ -61,12 +96,13 @@ export default function Scene({
 
       {/* Orbit Rings */}
 
-      {satellites.map((satellite) => (
-        <OrbitRing
-          key={`orbit-${satellite.id}`}
-          radius={satellite.radius}
-        />
-      ))}
+     {satellites.map((sat) => (
+  <OrbitRing
+    key={sat.id}
+    radius={sat.radius}
+    inclination={sat.inclination}
+  />
+))}
 
       {/* Satellites */}
 

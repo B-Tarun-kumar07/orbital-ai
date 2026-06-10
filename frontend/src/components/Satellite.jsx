@@ -29,9 +29,11 @@ displayRadius.current +=
 
 const radius = displayRadius.current;
 
+const tilt = (satellite.inclination * Math.PI) / 180;
+
 const x = radius * Math.cos(angle);
-const y = 0;
-const z = radius * Math.sin(angle);
+const y = radius * Math.sin(angle) * Math.sin(tilt);
+const z = radius * Math.sin(angle) * Math.cos(tilt);
 
     satelliteRef.current.position.set(x, y, z);
 
@@ -58,8 +60,13 @@ const z = radius * Math.sin(angle);
         setSelectedSatellite(satellite);
       }}
     >
+            {/* Invisible click helper */}
+      <mesh visible={false}>
+        <sphereGeometry args={[0.25, 16, 16]} />
+        <meshBasicMaterial transparent opacity={0} />
+      </mesh>
       <mesh>
-        <boxGeometry args={[0.12, 0.12, 0.18]} />
+        <boxGeometry args={[0.1, 0.1, 0.14]} />
         <meshStandardMaterial
           color={
   satellite.id === 3 || satellite.id === 5
@@ -86,18 +93,17 @@ emissiveIntensity={
         />
       </mesh>
 
-      <mesh position={[-0.22, 0, 0]}>
-        <boxGeometry args={[0.25, 0.01, 0.12]} />
-        <meshStandardMaterial color="#0b5ed7" />
-      </mesh>
+      <mesh position={[-0.16, 0, 0]}>
+  <boxGeometry args={[0.22, 0.01, 0.1]} />
+  <meshStandardMaterial color="#0b5ed7" />
+</mesh>
 
-      <mesh position={[0.22, 0, 0]}>
-        <boxGeometry args={[0.25, 0.01, 0.12]} />
-        <meshStandardMaterial color="#0b5ed7" />
-      </mesh>
-
+<mesh position={[0.16, 0, 0]}>
+  <boxGeometry args={[0.18, 0.008, 0.08]} />
+  <meshStandardMaterial color="#0b5ed7" />
+</mesh>
       <mesh position={[0, 0.1, 0]}>
-        <cylinderGeometry args={[0.01, 0.01, 0.08, 12]} />
+        <cylinderGeometry args={[0.008, 0.008, 0.05, 12]} />
         <meshStandardMaterial color="gold" />
       </mesh>
 
@@ -105,7 +111,7 @@ emissiveIntensity={
         position={[0, 0.16, 0]}
         rotation={[Math.PI / 2, 0, 0]}
       >
-        <circleGeometry args={[0.04, 20]} />
+        <circleGeometry args={[0.03, 20]} />
         <meshStandardMaterial color="#eeeeee" />
       </mesh>
 

@@ -1,138 +1,49 @@
-export const satellites = [
-  {
-    id: 1,
-    name: "SAT-001",
-    company: "ISRO",
+export const satellites = Array.from({ length: 10 }, (_, i) => {
+ const orbitRadius = 3.0 + (i % 8) * 0.5;
 
-    orbit: 1,
-    radius: 2.5,
-    speed: 0.7,
-    direction: 1,
-    initialAngle: 0,
-   currentRadius: 2.5,
-targetRadius: 2.5,
+  return {
+  id: i + 1,
+  name: `SAT-${String(i + 1).padStart(3, "0")}`,
 
-    size: 0.15,
-    color: "#00d4ff",
+  // Basic information
+  company: ["NASA", "ESA", "ISRO", "SpaceX", "JAXA"][i % 5],
 
-    altitude: "420 km",
-    fuel: 91,
-    health: 98,
+  // Orbit properties
+  orbit: (i % 10) + 1,
+  radius: orbitRadius,
+currentRadius: orbitRadius,
+targetRadius: orbitRadius,
 
-    currentDistance: "1240 km",
-    predictedDistance: "1240 km",
-    eta: "--",
+speed: 0.035 - orbitRadius * 0.0025,
+  direction: 1,
+  initialAngle: Math.random() * 360,
+  inclination: -60 + Math.random() * 120,
 
-    collision: 8,
-    status: "SAFE",
-  },
+  // Appearance
+  size: 0.12,
+  color: [
+    "#4caf50",
+    "#2196f3",
+    "#ff9800",
+    "#9c27b0",
+    "#f44336",
+  ][i % 5],
 
-  {
-    id: 2,
-    name: "SAT-002",
-    company: "NASA",
+  // Telemetry
+  altitude: `${500 + Math.floor(Math.random() * 700)} km`,
+  fuel: 60 + Math.floor(Math.random() * 40),
+  health: 80 + Math.floor(Math.random() * 20),
 
-    orbit: 2,
-    radius: 3,
-    speed: 0.6,
-    direction: 1,
-    initialAngle: 70,
+  currentDistance: `${600 + Math.floor(Math.random() * 500)} km`,
+  predictedDistance: `${Math.floor(Math.random() * 200)} km`,
+  eta: `00:${String(5 + (i % 55)).padStart(2, "0")}`,
 
-    size: 0.15,
-    color: "#ffd600",
-    currentRadius: 3,
-targetRadius: 3,
-
-    altitude: "520 km",
-    fuel: 88,
-    health: 97,
-
-    currentDistance: "980 km",
-    predictedDistance: "980 km",
-    eta: "--",
-
-    collision: 15,
-    status: "SAFE",
-  },
-
-  {
-    id: 3,
-    name: "SAT-003",
-    company: "SpaceX",
-
-    orbit: 3,
-    radius: 3.5,
-    speed: 0.9,
-    direction: 1,
-    initialAngle: 20,
-
-    size: 0.15,
-    color: "#00ffff",
-currentRadius: 3.5,
-targetRadius: 3.5,
-    altitude: "650 km",
-    fuel: 74,
-    health: 95,
-
-    currentDistance: "820 km",
-    predictedDistance: "0 km",
-    eta: "00:18",
-
-    collision: 91,
-    status: "WARNING",
-  },
-
-  {
-    id: 4,
-    name: "SAT-004",
-    company: "ISRO",
-
-    orbit: 4,
-    radius: 4.2,
-    speed: 0.4,
-    direction: 1,
-    initialAngle: 210,
-currentRadius: 4.2,
-targetRadius: 4.2,
-    size: 0.15,
-    color: "#00ff66",
-
-    altitude: "810 km",
-    fuel: 67,
-    health: 92,
-
-    currentDistance: "1450 km",
-    predictedDistance: "1450 km",
-    eta: "--",
-
-    collision: 6,
-    status: "SAFE",
-  },
-
-  {
-    id: 5,
-    name: "SAT-005",
-    company: "ESA",
-
-    orbit: 3,
-    radius: 3.5,
-    speed: 1.15,
-    direction: -1,
-    initialAngle: 190,
-currentRadius: 3.5,
-targetRadius: 3.5,
-    size: 0.15,
-    color: "#ff9800",
-
-    altitude: "648 km",
-    fuel: 82,
-    health: 99,
-
-    currentDistance: "820 km",
-    predictedDistance: "0 km",
-    eta: "00:18",
-
-    collision: 91,
-    status: "WARNING",
-  },
-];
+  collision: Math.floor(Math.random() * 100),
+  status:
+    Math.random() > 0.85
+      ? "WARNING"
+      : Math.random() > 0.95
+      ? "CRITICAL"
+      : "SAFE",
+  };
+});
