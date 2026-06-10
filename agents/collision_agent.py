@@ -1,53 +1,74 @@
-import random
+import copy
+
+from simulation.orbital_engine import update_satellite
+from simulation.collision import detect_collisions
+
 
 class CollisionAgent:
 
-    def detect_collisions(self, satellites):
+    def predict_collisions(
+            self,
+            satellites,
+            future_seconds=60):
 
-        collisions = []
-
-        number_of_collisions = random.randint(
-            1,
-            max(1, len(satellites)//5)
+        future_satellites = copy.deepcopy(
+            satellites
         )
 
-        used = set()
+        for sat in future_satellites:
 
-        for _ in range(number_of_collisions):
-
-            sat1, sat2 = random.sample(
-                satellites,
-                2
+            update_satellite(
+                sat,
+                dt=future_seconds
             )
 
-            pair = tuple(sorted([
-                sat1["sat_id"],
-                sat2["sat_id"]
-            ]))
-
-            if pair in used:
-                continue
-
-            used.add(pair)
-
-            collisions.append({
-
-                "satellite_1": sat1,
-
-                "satellite_2": sat2,
-
-                "collision_probability":
-                    random.randint(60,99),
-
-                "time_to_collision":
-                    random.randint(30,600),
-
-                "relative_speed":
-                    round(
-                        random.uniform(5,15),
-                        2
-                    )
-
-            })
+        collisions = detect_collisions(
+            future_satellites
+        )
 
         return collisions
+
+    def get_critical_collisions(
+            self,
+            satellites,
+            future_seconds=60):
+
+        collisions = self.predict_collisions(
+            satellites,
+            future_seconds
+        )
+
+        critical_collisions = []
+
+        for collision in collisions:
+
+            if collision[
+                "collision_probability"
+            ] >= 50:
+
+                critical_collisions.append(
+                    collision
+                )
+
+        return critical_collisions
+
+    def get_highest_risk_collision(
+            self,
+            satellites,
+            future_seconds=60):
+
+        collisions = self.predict_collisions(
+            satellites,
+            future_seconds
+        )
+
+        if len(collisions) == 0:
+            return None
+
+        highest = max(
+            collisions,
+            key=lambda c:
+            c["collision_probability"]
+        )
+
+        return highest
