@@ -1,9 +1,17 @@
 import { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
+import * as THREE from "three";
+
+import earthTexture from "../assets/textures/earth.jpg";
+import cloudTexture from "../assets/textures/clouds.png";
 
 export default function Earth() {
   const earthRef = useRef();
-
+  const cloudsRef = useRef();
+  
+const loader = new THREE.TextureLoader();
+const colorMap = loader.load(earthTexture);
+const cloudMap = loader.load(cloudTexture);
   useFrame(() => {
     if (earthRef.current) {
       earthRef.current.rotation.y += 0.0015;
