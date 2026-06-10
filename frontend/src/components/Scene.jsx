@@ -1,5 +1,6 @@
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, Stars } from "@react-three/drei";
+import { useState } from "react";
 
 import Earth from "./Earth";
 import Satellite from "./Satellite";
@@ -10,7 +11,17 @@ import { satellites } from "../data/satellites";
 export default function Scene({
   selectedSatellite,
   setSelectedSatellite,
-}) {
+  maneuverExecuted,
+})  {
+  const [positions, setPositions] = useState({});
+
+  const updatePosition = (id, position) => {
+    setPositions((prev) => ({
+      ...prev,
+      [id]: position,
+    }));
+  };
+
   return (
     <Canvas
       shadows
@@ -48,19 +59,33 @@ export default function Scene({
 
       <Earth />
 
-      {/* Orbit Rings + Satellites */}
+      {/* Orbit Rings */}
 
       {satellites.map((satellite) => (
-        <group key={satellite.id}>
-          <OrbitRing radius={satellite.radius} />
-
-          <Satellite
-            satellite={satellite}
-            selectedSatellite={selectedSatellite}
-            setSelectedSatellite={setSelectedSatellite}
-          />
-        </group>
+        <OrbitRing
+          key={`orbit-${satellite.id}`}
+          radius={satellite.radius}
+        />
       ))}
+
+      {/* Satellites */}
+
+     {satellites.map((satellite) => (
+  <Satellite
+    key={satellite.id}
+    satellite={{
+      ...satellite,
+
+      radius:
+        maneuverExecuted && satellite.id === 5
+          ? 4.2
+          : satellite.radius,
+    }}
+    selectedSatellite={selectedSatellite}
+    setSelectedSatellite={setSelectedSatellite}
+    updatePosition={updatePosition}
+  />
+))}
 
       <OrbitControls
         enableZoom
